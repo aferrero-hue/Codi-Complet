@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "express": "^4.18.3",
-    "mongodb": "^6.5.0",
+    "express": "^4.19.2",
+    "mongodb": "6.5",
     "mongoose": "^8.3.2"
   },
   "name": "codi-complet",
@@ -13,5 +13,8 @@
   "author": "aferrero",
   "license": "ISC",
   "keywords": [],
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^20.12.7"
+  }
 }
