@@ -1,5 +1,5 @@
 //Funcio per validar les dades del Registre [PENDENT]
-function validate(){
+function validateRegister(){
     //Elements
     var nom = document.getElementById("UserInput").value; 
     var email = document.getElementById("EmailInput").value;
@@ -18,7 +18,15 @@ function validate(){
       return 0;
     }
     
-    start();
+    startRegister();
+}
+//Funcio per validar les dades del Login [PENDENT]
+function validateLogin(){
+  //Elements
+  var nom = document.getElementById("UserInput").value; 
+  var contrasenya = document.getElementById("PasswdInput").value;
+  
+  startLogin();
 }
 function validarCorreu(correo) {
     // Expresión regular para validar el formato de un correo electrónico

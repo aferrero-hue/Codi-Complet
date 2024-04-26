@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seleccionar Fecha y Hora</title>
+  <style>
+    .calendar {
+      width: 300px;
+      margin: 20px auto;
+    }
+    .calendar table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .calendar th, .calendar td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    .calendar th {
+      background-color: #f2f2f2;
+    }
+    .selected {
+      background-color: #007bff;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="calendar">
+  <div>
+    <button id="prevMonth">Anterior</button>
+    <span id="currentMonthYear"></span>
+    <button id="nextMonth">Siguiente</button>
+  </div>
+  <table id="calendarTable">
+    <thead>
+      <tr>
+        <th>D</th>
+        <th>L</th>
+        <th>M</th>
+        <th>M</th>
+        <th>J</th>
+        <th>V</th>
+        <th>S</th>
+      </tr>
+    </thead>
+    <tbody id="calendarBody">
+    </tbody>
+  </table>
+  <div>
+    <input type="date" id="selectedDate">
+    <input type="time" id="selectedTime">
+  </div>
+</div>
+
+<script>
+  const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+  let currentDate = new Date();
+  let selectedDate = currentDate;
+
+  const prevMonthBtn = document.getElementById('prevMonth');
+  const nextMonthBtn = document.getElementById('nextMonth');
+  const currentMonthYear = document.getElementById('currentMonthYear');
+  const calendarBody = document.getElementById('calendarBody');
+  const selectedDateInput = document.getElementById('selectedDate');
+  const selectedTimeInput = document.getElementById('selectedTime');
+
+  function renderCalendar(month, year) {
+    const firstDayOfMonth = new Date(year, month, 1);
+    const lastDayOfMonth = new Date(year, month + 1, 0);
+    const startingDay = firstDayOfMonth.getDay();
+    const daysInMonth = lastDayOfMonth.getDate();
+
+    currentMonthYear.textContent = months[month] + ' ' + year;
+
+    let html = '';
+    let day = 1;
+
+    for (let i = 0; i < 6; i++) {
+      html += '<tr>';
+
+      for (let j = 0; j < 7; j++) {
+        if (i === 0 && j < startingDay) {
+          html += '<td></td>';
+        } else if (day > daysInMonth) {
+          break;
+        } else {
+          const isSelected = selectedDate.getDate() === day && selectedDate.getMonth() === month && selectedDate.getFullYear() === year;
+          html += '<td class="' + (isSelected ? 'selected' : '') + '">' + day + '</td>';
+          day++;
+        }
+      }
+
+      html += '</tr>';
+    }
+
+    calendarBody.innerHTML = html;
+  }
+
+  renderCalendar(currentDate.getMonth(), currentDate.getFullYear());
+
+  prevMonthBtn.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar(currentDate.getMonth(), currentDate.getFullYear());
+  });
+
+  nextMonthBtn.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar(currentDate.getMonth(), currentDate.getFullYear());
+  });
+
+  calendarBody.addEventListener('click', (e) => {
+    if (e.target.tagName === 'TD') {
+      const day = parseInt(e.target.textContent);
+      if (!isNaN(day)) {
+        selectedDate.setDate(day);
+        selectedDateInput.value = selectedDate.toISOString().split('T')[0];
+        updateSelectedDateTime();
+        renderCalendar(currentDate.getMonth(), currentDate.getFullYear());
+      }
+    }
+  });
+
+  selectedTimeInput.addEventListener('change', updateSelectedDateTime);
+
+  function updateSelectedDateTime() {
+    const selectedTime = selectedTimeInput.value;
+    const timeParts = selectedTime.split(':');
+    selectedDate.setHours(parseInt(timeParts[0]));
+    selectedDate.setMinutes(parseInt(timeParts[1]));
+  }
+</script>
+
+</body>
+</html>
