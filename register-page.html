@@ -27,9 +27,13 @@
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
-
-  <script src="assets/js/register.js"></script>
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
 </head>
+<script src="assets/js/index.js"></script>    
+
 
 <body>
 
@@ -95,19 +99,50 @@
       <div class="container">
         <form>
           <div class="form-group">
-            <label for="exampleInputEmail1">Nou Usuari:</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+            <label for="UserInput">Nou Usuari:</label>
+            <input type="email" class="form-control" id="UserInput" placeholder="Usuari">
           </div>
           <br>
           <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            <label for="EmailInput">Email:</label>
+            <input type="email" class="form-control" id="EmailInput" placeholder="Contrasenya">
           </div>
           <br>
-          <button type="submit" class="btn btn-primary">Login</button>
+          <div class="form-group">
+            <label for="PasswdInput">Password</label>
+            <input type="password" class="form-control" id="PasswdInput" placeholder="Password">
+          </div>
+          <br>
+          <div class="form-group">
+            <label for="PasswdValidInput">Torna a introduir la contrasenya:</label>
+            <input type="password" class="form-control" id="PasswdValidInput" placeholder="Confirmar Password">
+          </div>
+          <br>
         </form>
       </div>
     </section>
+    <button type="submit" class="btn btn-primary" onclick="validate()">Register</button>
+    <script>
+      function start(){
+    
+        //Elements
+        var nombre = document.getElementById("UserInput").value; 
+        var email = document.getElementById("EmailInput").value;
+        var contrasenya = document.getElementById("PasswdInput").value;
+        var settings = {
+        "url": "http://localhost:8000/POST/" + nombre + "/" + email + "/" + contrasenya, 
+        "method": "GET",
+        "timeout": 0,
+    };
+    
+      
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+        });
+        
+      }
+
+    </script>
 
   </main><!-- End #main -->
 
