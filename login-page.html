@@ -31,8 +31,8 @@
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
-</head>
-<script src="assets/js/index.js"></script>    
+  <script src="assets/js/index.js"></script>  
+</head>  
 
 
 <body>
@@ -98,7 +98,6 @@
     
         //Elements
         var nombre = document.getElementById("UserInput").value; 
-        //var email = document.getElementById("EmailInput").value;
         var contrasenya = document.getElementById("PasswdInput").value;
         var settings = {
             "url": "http://localhost:8000/login/" + nombre + "/" + contrasenya, 
@@ -108,7 +107,11 @@
     
       
         $.ajax(settings).done(function (response) {
+          //SetAccesToken(response);
           console.log(response);
+          //window.location.href = "index.html";
+          setAccessToken(response);
+          window.location.href = "index.html";
         });
         
       }

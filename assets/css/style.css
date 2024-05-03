@@ -1538,3 +1538,31 @@ section {
   font-size: 13px;
   color: #fff;
 }
+
+/*--------------------------------------------------------------
+# Calendar
+--------------------------------------------------------------*/
+.calendar {
+  width: 300px;
+  margin: 20px auto;
+}
+.calendar table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.calendar th, .calendar td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+.calendar th {
+  background-color: #f2f2f2;
+}
+.selected {
+  background-color: #007bff;
+  color: #fff;
+}
+/*Alternative Button*/
+#Basic-Login-ref{
+  background-color: transparent;
+}

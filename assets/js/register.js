@@ -6,6 +6,8 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
 const uri = "mongodb+srv://aferrero:13PWFW5OpgDQ56fu@cluster0.nxj9ol6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+// Variable para almacenar el Access Token
+let accessToken = null;
 
 // Conectar a la base de datos
 const client = new MongoClient(uri,  {
@@ -27,7 +29,7 @@ async function POSTuser(Nom, Email, Contrasenya) {
         const collection = database.collection("Usuaris");
         const Status = "Undefined";
 
-        //Encriptar contrasenya [PENDENT]
+        //Encriptar contrasenya
         Contrasenya = encriptarConSHA256(Contrasenya);
 
         //Verificar si l'usuari existeix en la BDD o el correu [PENDENT]
@@ -81,9 +83,16 @@ async function login(Nom, Contrasenya) {
             if (existingUser.passwd === Contrasenya) {
                 // La contraseña es correcta, el usuario puede iniciar sesión
                 console.log("¡Contraseña correcta! Usuario autenticado.");
-                const token = jwt.sign({ userId: existingUser._id }, 'secret_key', { expiresIn: '1h' });
+                //Token V1
+                /*const token = jwt.sign({ userId: existingUser._id }, 'secret_key', { expiresIn: '1h' });
+                return token;*/
+                //-------------------------
+                //Token V2
+                const token = generateAccessToken();
+                //setAccessToken(token);
+                accessToken = token;
                 return token;
-                //return "¡Contraseña correcta! Usuario autenticado.";
+
             } else {
                 // La contraseña es incorrecta
                 console.log("Contraseña incorrecta. Por favor, inténtalo de nuevo.");
@@ -111,6 +120,28 @@ function encriptarConSHA256(contraseña) {
     hash.update(contraseña);
     return hash.digest('hex');
   }
+//---------------------------------------------------------------
+//Funciones AccesToken:
+// Función para generar un Access Token
+function generateAccessToken() {
+    // Generar un token aleatorio
+    const token = Math.random().toString(36).substr(2); // Esto es solo un ejemplo, deberías usar un método más seguro en producción
+    return token;
+}
+// Función para verificar si un Access Token está en uso (aquí suponemos que lo comparamos con el almacenado)
+function isAccessTokenInUse() {
+    console.log(accessToken);
+    if(accessToken != null){
+        return accessToken;
+    }else{
+        return "Invalid";
+    }
+}
+//Eliminar Token Actual basicament LOGOUT:
+function removeAccesToken(){
+    accessToken = null;
+    return "Bye Bye B)";
+}
 //---------------------------------------------------------------
 app.use(cors());
 
@@ -149,7 +180,30 @@ app.get("/login/:nombre/:contrasenya", async (req, res) => {
         res.status(500).json({ error: "Error interno del servidor" });
     }
 });
-
+//Autentificació usuari login en altres menus: (ACCESTOKEN)
+app.get("/accesToken", async (req, res) => {
+    try {
+        const data = await isAccessTokenInUse(); // Espera a que se resuelva la promesa
+        res.json(data); // Enviar una respuesta JSON con los datos obtenidos
+    } catch (error) {
+        // Manejar cualquier error que ocurra durante la conexión o la consulta
+        console.error("Error:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+});
+//Autentificació usuari login en altres menus: (ACCESTOKEN)
+app.get("/accesTokenLogOut", async (req, res) => {
+    try {
+        console.log("Anem a fer un logout siii");
+        const data = await removeAccesToken(); // Espera a que se resuelva la promesa
+        console.log("Fucking Nightmare...");
+        res.json(data); // Enviar una respuesta JSON con los datos obtenidos
+    } catch (error) {
+        // Manejar cualquier error que ocurra durante la conexión o la consulta
+        console.error("Error:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+});
 app.listen(8000, () => {
     console.log("Server started on port 8000");
 });
