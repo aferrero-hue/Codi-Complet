@@ -95,25 +95,35 @@
     <button type="submit" class="btn btn-primary" onclick="validateLogin()">Register</button>
     <script>
       function startLogin(){
-    
-        //Elements
-        var nombre = document.getElementById("UserInput").value; 
-        var contrasenya = document.getElementById("PasswdInput").value;
-        var settings = {
-            "url": "http://localhost:8000/login/" + nombre + "/" + contrasenya, 
-            "method": "GET",
-            "timeout": 0,
-        };
-    
-      
-        $.ajax(settings).done(function (response) {
-          //SetAccesToken(response);
-          console.log(response);
-          //window.location.href = "index.html";
-          setAccessToken(response);
+
+        if (checkCookies()) {
+          alert('Ya hay un usuario registrado...');
           window.location.href = "index.html";
-        });
-        
+        } else {
+    
+          //Elements
+          var nombre = document.getElementById("UserInput").value; 
+          var password = document.getElementById("PasswdInput").value;
+          var settings = {
+              "url": "http://localhost:8000/login/" + nombre, 
+              "method": "POST",
+              "timeout": 0,
+              "data": JSON.stringify({ "password": password }), // Enviar la contraseña como parte del cuerpo
+              "contentType": "application/json"
+          };
+    
+          $.ajax(settings).done(function (response) {
+          //SetAccesToken(response);
+            console.log(response);
+            if(response == "Contraseña incorrecta" || response == "El usuario no existe"){
+              alert(response);
+            }else{
+              createCookie(nombre, response);
+              //setAccessToken(response);
+              window.location.href = "index.html";
+            }
+          });
+        }
       }
 
     </script>

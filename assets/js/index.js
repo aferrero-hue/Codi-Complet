@@ -26,8 +26,14 @@ function validateRegister(){
 }
 //Funcio per validar les dades del Login [PENDENT]
 function validateLogin(){
-  
-  startLogin();
+  //Elements
+  var nombre = document.getElementById("UserInput").value; 
+  var contrasenya = document.getElementById("PasswdInput").value;
+  if(nombre == null || contrasenya == null || nombre.trim() === '' || contrasenya.trim() === ''){
+    console.log("We have a problem dear...");
+  }else{
+    startLogin();
+  }
 }
 function validarCorreu(correo) {
     // Expresión regular para validar el formato de un correo electrónico
@@ -40,19 +46,36 @@ function validarContra(con) {
     return regex.test(con);
 } 
 //-------------------------------------------------------
-// Función para establecer el Access Token y guardarlo en una cookie
-function setAccessToken(token) {
-  //accessToken = token;
-  // Guardar el token en una cookie con una duración de 1 hora
-  document.cookie = `access_token=${token}; expires=${new Date(Date.now() + 3600000).toUTCString()}; path=/`;
+//COOKIES:
+function createCookie(nom, valor) {
+  var cookieName = nom;
+  var cookieValue = valor;
+  var expirationMinutes = 30; // Duración de la cookie en minutos
+
+  var date = new Date();
+  date.setTime(date.getTime() + (expirationMinutes * 60 * 1000));
+  var expires = "expires=" + date.toUTCString();
+
+  document.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
+  alert("Cookie creada correctamente");
 }
-//-------------------------------------------------------
-// Funció per aplicar cambis quan un usuari s'ha registrat.
-function RegistredChanges(){
-  var enlace = document.getElementById("Basic-Login-ref");
-  enlace.textContent = "LogOut";
-  enlace.onclick = function() {
-    // Aquí puedes poner la función que deseas ejecutar cuando se haga clic en el enlace
-    LogOut();
-  };
+
+function checkCookies(){
+  return document.cookie.length > 0;
+}
+
+function deleteCookies(){
+  var cookies = document.cookie.split(";");
+
+  for (var i = 0; i < cookies.length; i++) {
+    var cookie = cookies[i];
+    var eqPos = cookie.indexOf("=");
+    var cookieName = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+    document.cookie = cookieName + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+  }
+  alert("Todas las cookies han sido eliminadas.");
+}
+//---------------------------------------------------------
+function goingLogin(){
+  window.location.href = "login-page.html";
 }

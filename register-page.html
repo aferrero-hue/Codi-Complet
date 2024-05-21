@@ -111,10 +111,10 @@
         var email = document.getElementById("EmailInput").value;
         var contrasenya = document.getElementById("PasswdInput").value;
         var settings = {
-        "url": "http://localhost:8000/POST/" + nombre + "/" + email + "/" + contrasenya, 
-        "method": "GET",
-        "timeout": 0,
-    };
+          "url": "http://localhost:8000/POST/" + nombre + "/" + email + "/" + contrasenya, 
+          "method": "POST",
+          "timeout": 0,
+        };
     
       
         $.ajax(settings).done(function (response) {

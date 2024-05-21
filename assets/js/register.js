@@ -4,10 +4,11 @@ const app = express();
 const cors = require("cors"); // Importa el paquete cors
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+
 
 const uri = "mongodb+srv://aferrero:13PWFW5OpgDQ56fu@cluster0.nxj9ol6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 // Variable para almacenar el Access Token
-let accessToken = null;
 
 // Conectar a la base de datos
 const client = new MongoClient(uri,  {
@@ -18,7 +19,25 @@ const client = new MongoClient(uri,  {
     }
 });
 //--------------------------------------------------------------------
-//POST User [PENDENT]
+//GET Dates [PENDENT]
+async function GetDates(){
+    await client.connect();
+    console.log("Conectado a MongoDB");
+    
+    // Seleccionar la base de datos y la colección
+    const database = client.db("Estetica");
+    const collection = database.collection("Usuaris");
+    
+    // Obtener todos los documentos de la colección
+    const datos = await collection.find({}).toArray();
+    //console.log("Datos:", datos);
+    
+    // Mapear los datos para obtener solo el nombre y la próxima fecha
+    const datesWithName = datos.map(doc => ({ name: doc.name, nextdate: doc.nextdate }));
+    
+    return datesWithName;
+}
+//POST User
 async function POSTuser(Nom, Email, Contrasenya) {
     try {
         // Connect the client to the server (optional starting in v4.7)
@@ -27,7 +46,7 @@ async function POSTuser(Nom, Email, Contrasenya) {
         // Seleccionar la base de datos y la colección
         const database = client.db("Estetica");
         const collection = database.collection("Usuaris");
-        const Status = "Undefined";
+        const nextDate = null;
 
         //Encriptar contrasenya
         Contrasenya = encriptarConSHA256(Contrasenya);
@@ -49,7 +68,7 @@ async function POSTuser(Nom, Email, Contrasenya) {
                 name: Nom,
                 email: Email,
                 passwd: Contrasenya,
-                status: Status
+                nextdate: nextDate
             };
             // Insertar el nuevo documento en la colección
             const resultado = await collection.insertOne(nuevoUsuario);
@@ -84,13 +103,15 @@ async function login(Nom, Contrasenya) {
                 // La contraseña es correcta, el usuario puede iniciar sesión
                 console.log("¡Contraseña correcta! Usuario autenticado.");
                 //Token V1
-                /*const token = jwt.sign({ userId: existingUser._id }, 'secret_key', { expiresIn: '1h' });
-                return token;*/
+                //const token = jwt.sign({ userId: existingUser.name }, 'secret_key', { expiresIn: '1h' });
+                //return token;
                 //-------------------------
                 //Token V2
-                const token = generateAccessToken();
+                //const token = generateAccessToken(existingUser.name);
                 //setAccessToken(token);
-                accessToken = token;
+                const token = jwt.sign({ userId: existingUser.name }, 'secret_key', { expiresIn: '1h' });
+
+                //return existingUser.name;
                 return token;
 
             } else {
@@ -101,7 +122,7 @@ async function login(Nom, Contrasenya) {
         }else {
             // El usuario no existe en la base de datos
             console.log("El usuario no existe.");
-            return "El usuario no existe.";
+            return "El usuario no existe";
         }
 
 
@@ -121,36 +142,30 @@ function encriptarConSHA256(contraseña) {
     return hash.digest('hex');
   }
 //---------------------------------------------------------------
-//Funciones AccesToken:
-// Función para generar un Access Token
-function generateAccessToken() {
-    // Generar un token aleatorio
-    const token = Math.random().toString(36).substr(2); // Esto es solo un ejemplo, deberías usar un método más seguro en producción
-    return token;
-}
-// Función para verificar si un Access Token está en uso (aquí suponemos que lo comparamos con el almacenado)
-function isAccessTokenInUse() {
-    console.log(accessToken);
-    if(accessToken != null){
-        return accessToken;
-    }else{
-        return "Invalid";
-    }
-}
-//Eliminar Token Actual basicament LOGOUT:
-function removeAccesToken(){
-    accessToken = null;
-    return "Bye Bye B)";
-}
-//---------------------------------------------------------------
-app.use(cors());
+//app.use(cors());
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors({
+    credentials: true
+}));
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
 });
-
+//Agafar les dates reservades d'usuari: [PENDENT]
+app.get("/GET/Dates", async (req, res) => {
+    try {
+        const data = await GetDates(); // Espera a que se resuelva la promesa
+        console.log("Proceso completado");
+        res.json(data); // Enviar una respuesta JSON con los datos obtenidos
+    } catch (error) {
+        // Manejar cualquier error que ocurra durante la conexión o la consulta
+        console.error("Error:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+});
 //Crear un nou usuari:
-app.get("/POST/:nombre/:email/:contrasenya", async (req, res) => {
+app.post("/POST/:nombre/:email/:contrasenya", async (req, res) => {
     try {
         const nombre = req.params.nombre; // Obtener el valor del parámetro nombre de la URL
         const contrasenya = req.params.contrasenya;
@@ -166,14 +181,22 @@ app.get("/POST/:nombre/:email/:contrasenya", async (req, res) => {
     }
 });
 //Autentificació usuari login:
-app.get("/login/:nombre/:contrasenya", async (req, res) => {
+app.post("/login/:nombre", async (req, res) => {
     try {
-        const nombre = req.params.nombre; // Obtener el valor del parámetro nombre de la URL
-        const contrasenya = req.params.contrasenya;
-
+        /*const nombre = req.params.nombre; // Obtener el valor del parámetro nombre de la URL
+        const contrasenya = req.params.contrasenya;*/
+        const nombre = req.params.nombre;
+        const contrasenya = req.body.password;
+        //const contrasenya = "ahmed1234";
         const data = await login(nombre, contrasenya); // Espera a que se resuelva la promesa
-        console.log("Proceso completado");
-        res.json(data); // Enviar una respuesta JSON con los datos obtenidos
+        if(data == "Contraseña incorrecta" || data == "El usuario no existe"){
+            res.json(data);
+        }else{
+            //const token = jwt.sign({ userId: data }, 'secret_key', { expiresIn: '1h' });
+            //res.cookie("jwt", token);
+            res.json(data); // Enviar una respuesta JSON con los datos obtenidos
+        }
+    
     } catch (error) {
         // Manejar cualquier error que ocurra durante la conexión o la consulta
         console.error("Error:", error);
@@ -183,21 +206,9 @@ app.get("/login/:nombre/:contrasenya", async (req, res) => {
 //Autentificació usuari login en altres menus: (ACCESTOKEN)
 app.get("/accesToken", async (req, res) => {
     try {
-        const data = await isAccessTokenInUse(); // Espera a que se resuelva la promesa
-        res.json(data); // Enviar una respuesta JSON con los datos obtenidos
-    } catch (error) {
-        // Manejar cualquier error que ocurra durante la conexión o la consulta
-        console.error("Error:", error);
-        res.status(500).json({ error: "Error interno del servidor" });
-    }
-});
-//Autentificació usuari login en altres menus: (ACCESTOKEN)
-app.get("/accesTokenLogOut", async (req, res) => {
-    try {
-        console.log("Anem a fer un logout siii");
-        const data = await removeAccesToken(); // Espera a que se resuelva la promesa
-        console.log("Fucking Nightmare...");
-        res.json(data); // Enviar una respuesta JSON con los datos obtenidos
+        const token = req.cookies.jwt;
+
+        res.json(token);
     } catch (error) {
         // Manejar cualquier error que ocurra durante la conexión o la consulta
         console.error("Error:", error);
@@ -207,5 +218,44 @@ app.get("/accesTokenLogOut", async (req, res) => {
 app.listen(8000, () => {
     console.log("Server started on port 8000");
 });
+//---------------------------
+//Funcio per modificar un Usuari.
+app.put("/PUT/date/:usuari", async (req, res) => {
+    try {
+        const usuari = req.params.usuari;
+        const nextdate = req.body.nextdate;
+
+        UpdateUser(usuari, nextdate);
+        res.status(200);
+    } catch (error) {
+        // Manejar cualquier error que ocurra durante la conexión o la consulta
+        console.error("Error:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+});
+async function UpdateUser(usuari, data){
+    await client.connect();
+    console.log("Conectado a MongoDB");
+    
+    // Seleccionar la base de datos y la colección
+    const database = client.db("Estetica");
+    const collection = database.collection("Usuaris");
+
+    const filter = { name: usuari }; // Filtro para encontrar el documento a modificar
+    const updateDoc = {
+        $set: { nextdate : data } 
+    };
+    const result = await collection.updateOne(filter, updateDoc);
+    
+    if (result){
+        console.log(result)
+    }
+
+    
+}
+    
+//--------------------------
+
+
 
 module.exports = { login };

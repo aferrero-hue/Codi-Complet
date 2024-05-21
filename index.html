@@ -57,7 +57,7 @@
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
 
-      <a id="Basic-Login-ref" href="login-page.html" class="get-started-btn scrollto">Login</a>
+      <button id="Basic-Login-ref" onclick="goingLogin()">Login</button>
 
     </div>
   </header><!-- End Header -->
@@ -338,36 +338,24 @@
   <script>
     //Funció per validar el usuari:
     document.addEventListener("DOMContentLoaded", function() {
-      //Validar el tema Acces Token:
-      var settings = {
-          "url": "http://localhost:8000/accesToken", 
-          "method": "GET",
-          "timeout": 0,
-      };
-
-      $.ajax(settings).done(function (response) {
-        //SetAccesToken(response);
-        console.log(response);
-        if(response != "Invalid"){
+      if (checkCookies()) {
+          console.log('Ya hay un usuario registrado...');
+          //Cambiar Button
           RegistredChanges();
-          console.log("L'usuari s'ha registrat correctament!");
-        }else{
-          console.log("No hi ha un usuari registrat.");
-        }
-      });
-    });
-    //Funció per fer LogOut:
-    function LogOut(){
-      var settings = {
-          "url": "http://localhost:8000/accesTokenLogOut", 
-          "method": "GET",
-          "timeout": 0,
-      };
+      } 
 
-      $.ajax(settings).done(function (response) {
-        alert("Logout correcte :D");
-      });
-    }
+    });
+    //-------------------------------------------------------
+// Funció per aplicar cambis quan un usuari s'ha registrat.
+function RegistredChanges(){
+  var enlace = document.getElementById("Basic-Login-ref");
+  enlace.textContent = "LogOut";
+  enlace.onclick = function() {
+    // Aquí puedes poner la función que deseas ejecutar cuando se haga clic en el enlace
+    deleteCookies();
+    goingLogin();
+  };
+}
   </script>
 
 </body>
