@@ -219,7 +219,7 @@ app.listen(8000, () => {
     console.log("Server started on port 8000");
 });
 //---------------------------
-//Funcio per modificar un Usuari.
+//Funcio per modificar un Usuari [PENDENT]
 app.put("/PUT/date/:usuari", async (req, res) => {
     try {
         const usuari = req.params.usuari;

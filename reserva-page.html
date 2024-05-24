@@ -4,66 +4,49 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="assets/css/style.css" rel="stylesheet">
-  <script src="assets/js/Calendar.js"></script>    
+  <script src="assets/js/Calendar.js"></script>   
+  <script src="assets/js/index.js"></script>    
   <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
-  <script src="assets/js/index.js"></script>  
-
-  <title>Seleccionar Fecha y Hora</title>
+  <link href="assets/css/CalendarStyle.css" rel="stylesheet">
 </head>
 <body>
+<div class="month-selector">
+    <button id="prevMonth">Anterior</button>
+    <span id="monthYear"></span>
+    <button id="nextMonth">Siguiente</button>
+</div>
+<div class="calendar" id="calendar">
+    <!-- Los días se generarán dinámicamente con JavaScript -->
+</div>
+<div class="hours" id="hours">
+    <!-- Las horas se mostrarán aquí -->
+</div>
 
-<div class="calendar">
-  <div>
-    <button id="prevMonth" onclick="prevMonth()">Anterior</button>
-    <span id="currentMonthYear"></span>
-    <button id="nextMonth" onclick="nextMonth()">Siguiente</button>
-  </div>
-  <table id="calendarTable">
-    <thead>
-      <tr>
-        <th>D</th>
-        <th>L</th>
-        <th>M</th>
-        <th>M</th>
-        <th>J</th>
-        <th>V</th>
-        <th>S</th>
-      </tr>
-    </thead>
-    <tbody id="calendarBody">
-    </tbody>
-  </table>
-  <div>
-    <input type="date" id="selectedDate">
-    <select id="hora">
-      <option value="default"></option>
-    </select>
-    <button id="PutUSER" style="display: none;">Mostrar Selección</button>
+<!-- Modal -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close-button" id="closeModal">&times;</span>
+    <h2>Confirmar selección</h2>
+    <p id="modalText"></p>
+    <button id="confirmButton">Sí</button>
+    <button id="cancelButton">No</button>
   </div>
 </div>
 
 <script>
-  //Aqui s'ha de fer una funció perque tingui accés API:
-  //Principalment la validació de l'hora seleccionada: [PENDENT]
-  function LetsPutUser(result){
-    console.log("");
-    //Una vegada s'han fet els cambis:
-    window.location.reload();
-  }
-  //També una comprovació de les hores seleccionades: [PENDENT]
   document.addEventListener("DOMContentLoaded", function() {
     if (checkCookies()) {
       DefineUser();       
       GetSavedHours();
     }else{
-      alert("no hay un registro men...");
       goingLogin();
     }
-      //GetSavedHours();
   });
+  //-------------------------------------------------------
+  //Obtenir dades hores:
   function GetSavedHours(){
     var settings = {
           "url": "http://localhost:8000/GET/Dates", 
@@ -76,23 +59,6 @@
         setTakenDates(response);
       });
   }
-  function SubmitHours(usuari, nextdate){
-    console.log(nextdate);
-    var settings = {
-              "url": "http://localhost:8000/PUT/date/" + usuari, 
-              "method": "PUT",
-              "timeout": 0,
-              "data": JSON.stringify({ "nextdate": nextdate }),
-              "contentType": "application/json"
-          };
-
-      $.ajax(settings).done(function (response) {
-        console.log(response);
-      });
-
-  }
 </script>
-
 </body>
 </html>
-

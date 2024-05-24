@@ -78,7 +78,6 @@
 
     <section class="inner-page">
       <div class="container">
-        <form>
           <div class="form-group">
             <label for="UserInput">Nou Usuari:</label>
             <input type="email" class="form-control" id="UserInput" placeholder="Usuari">
@@ -86,13 +85,13 @@
           <br>
           <div class="form-group">
             <label for="PasswdInput">Password</label>
-            <input type="password" class="form-control" id="PasswdInput" placeholder="Password">
+            <input type="password" class="form-control" id="PasswdInput" placeholder="Password"><br>
+            <button type="submit" class="btn btn-primary" onclick="validateLogin()">Register</button>
+
           </div>
           <br>
-        </form>
       </div>
     </section>
-    <button type="submit" class="btn btn-primary" onclick="validateLogin()">Register</button>
     <script>
       function startLogin(){
 
