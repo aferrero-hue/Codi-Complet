@@ -119,6 +119,8 @@
       
         $.ajax(settings).done(function (response) {
           console.log(response);
+          //PENDENT: Falta modificar la resposta en el cas de que l'usuari no esta disponible.
+          //NOTA: La resposta ja es funcional, el "que" provoca cada resposta esta pendent.
           window.location.href = "login-page.html";
         });
         

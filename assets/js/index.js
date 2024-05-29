@@ -5,7 +5,7 @@ function validateRegister(){
     var email = document.getElementById("EmailInput").value;
     var contrasenya = document.getElementById("PasswdInput").value;
     var contrasenyaValida = document.getElementById("PasswdValidInput").value;
-    if(!nom || nom.trim() === '' || nom.trim().length < 6){
+    if(!nom || nom.trim() === '' || nom.trim().length <= 3){
       console.log("El nom d'usuari no es correcte");
       return 0;
     }
@@ -75,7 +75,54 @@ function deleteCookies(){
   }
   alert("Todas las cookies han sido eliminadas.");
 }
+//----------
+// Función para obtener todas las cookies como un objeto
+function getAllCookies() {
+  const cookies = document.cookie.split(';'); // Divide la cadena de cookies en pares clave-valor
+  const cookieObject = {};
+
+  // Itera sobre los pares clave-valor y los agrega al objeto cookieObject
+  cookies.forEach(cookie => {
+      const [name, value] = cookie.trim().split('=');
+      const decodedName = decodeURIComponent(name);
+      const decodedValue = decodeURIComponent(value);
+      cookieObject[decodedName] = decodedValue;
+  });
+
+  return cookieObject;
+}
+// Función para encontrar el nombre de la cookie con un valor de token
+function getCookieName(cookies) {
+  for (const [name, value] of Object.entries(cookies)) {
+      if (isJWT(value)) {
+          return name;
+      }
+  }
+  return null;
+}
+// Función para verificar si una cadena es un JWT
+function isJWT(token) {
+  const jwtPattern = /^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+/=]*$/;
+  return jwtPattern.test(token);
+}
+//-----------
+//GET Username:
+function GettingUser(){
+  const allCookies = getAllCookies();
+
+  let username = getCookieName(allCookies);
+  //selectedDates
+
+  if (username) {
+      console.log('Nombre de la cookie con token:', username);
+      return username;
+  } else {
+      console.log('No se encontró una cookie con un valor de token válido.');
+  }
+}
 //---------------------------------------------------------
 function goingLogin(){
   window.location.href = "login-page.html";
 }
+//---------------------------------------------------------
+//Validació Data Anterior (NOTA: Tinc la mateixa funció en Calendar.js)

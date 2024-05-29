@@ -19,7 +19,7 @@ const client = new MongoClient(uri,  {
     }
 });
 //--------------------------------------------------------------------
-//GET Dates [PENDENT]
+//GET Dates
 async function GetDates(){
     await client.connect();
     console.log("Conectado a MongoDB");
@@ -57,9 +57,11 @@ async function POSTuser(Nom, Email, Contrasenya) {
 
         if (existingUser) {
             if(existingEmail){
+                console.log("EMAIL NO DISPONIBLE");
                 return "Email no disponible";
 
             }else{
+                console.log("USUARI NO DISPONIBLE");
                 return "Usuari no disponible";
             }
         }else{
@@ -219,16 +221,15 @@ app.listen(8000, () => {
     console.log("Server started on port 8000");
 });
 //---------------------------
-//Funcio per modificar un Usuari [PENDENT]
+//Funcio per modificar un Usuari [PENDENT DE VALIDAR SI EXISTEIX ALGUN PROBLEMA]
 app.put("/PUT/date/:usuari", async (req, res) => {
     try {
         const usuari = req.params.usuari;
         const nextdate = req.body.nextdate;
 
         UpdateUser(usuari, nextdate);
-        res.status(200);
+        res.json(200);
     } catch (error) {
-        // Manejar cualquier error que ocurra durante la conexión o la consulta
         console.error("Error:", error);
         res.status(500).json({ error: "Error interno del servidor" });
     }
@@ -241,21 +242,79 @@ async function UpdateUser(usuari, data){
     const database = client.db("Estetica");
     const collection = database.collection("Usuaris");
 
-    const filter = { name: usuari }; // Filtro para encontrar el documento a modificar
+    const filter = { name: usuari };
     const updateDoc = {
         $set: { nextdate : data } 
     };
     const result = await collection.updateOne(filter, updateDoc);
-    
-    if (result){
-        console.log(result)
-    }
-
-    
+     
 }
+//---------------------------
+//PUT (Es com un delete) Eliminar la data d'usuari [FUNCIONAL]   
+//NOTA: Es funcional pero necesita alguna modificació menor.
+//NOTA: Aclarar confusió PUT/DEL & realitzar codi Hardcoded.
+app.put("/DEL/date/:usuari", async (req, res) => {
+    try {
+        const usuari = req.params.usuari;
+
+        UpdateUserDate(usuari);
+        res.json(200);
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+});
+async function UpdateUserDate(userName){
+    try {
+        await client.connect();
+        console.log("Conectado a MongoDB");
     
+        const database = client.db("Estetica");
+        const collection = database.collection("Usuaris");
+    
+        const updateResult = await collection.updateOne(
+          { name: userName }, 
+          { $set: { nextdate: null } }
+        );
+    
+        if (updateResult.matchedCount === 0) {
+          console.log(`No existeix el usuari: ${userName}`);
+        } else {
+          console.log(`S'ha actualitzat el usuari: ${userName}`);
+        }
+    
+    } catch (error) {
+        console.error('Error al conectar o actualizar la base de datos:', error);
+    }
+}
 //--------------------------
+//GET by username (No retorna tots els objectes si no la data)
+//S'ha de verificar si funciona no estic segur ;---;
+app.get("/GET/date/:usuari", async (req, res) => {
+    try {
+        const usuari = req.params.usuari;
 
-
-
+        const data = await getUserDate(usuari);
+        res.json(data);
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+});
+async function getUserDate(userName){
+    try {
+        await client.connect();
+        console.log("Conectado a MongoDB");
+    
+        const database = client.db("Estetica");
+        const collection = database.collection("Usuaris");
+    
+        const user = await collection.findOne({ name: userName });
+        return user.nextdate;
+    
+    } catch (error) {
+        console.error('Error al conectar o obtenir la base de datos:', error);
+    }
+}
+//--------------------------
 module.exports = { login };
