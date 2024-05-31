@@ -122,7 +122,6 @@
         <div class="row">
           <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
             <div class="icon-box">
-              <div class="icon"><i class="bx bxl-dribbble"></i></div>
               <h4><a href="">Lorem Ipsum</a></h4>
               <p>Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
             </div>
@@ -180,7 +179,7 @@
         <div class="text-center">
           <h3>Call To Action</h3>
           <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          <a class="cta-btn" href="#">Call To Action</a>
+          <a class="cta-btn" href="login-page.html" id="Reserva_btn">Call To Action</a>
         </div>
 
       </div>
@@ -191,8 +190,8 @@
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
-          <h2>Contact</h2>
-          <p>Contact Us</p>
+          <h2>Contacte</h2>
+          <p>Contacta'ns</p>
         </div>
 
         <div>
@@ -227,7 +226,7 @@
 
           <div class="col-lg-8 mt-5 mt-lg-0">
 
-            <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+            <form action="https://formsubmit.co/8b7a2d49af843b43613db09e09808537" method="POST" class="php-email-form">
               <div class="row">
                 <div class="col-md-6 form-group">
                   <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
@@ -248,6 +247,7 @@
                 <div class="sent-message">Your message has been sent. Thank you!</div>
               </div>
               <div class="text-center"><button type="submit">Send Message</button></div>
+              <input type="hidden" name="_captcha" value="false">
             </form>
           </div>
 
@@ -264,16 +264,15 @@
       <div class="container">
         <div class="row">
 
-          <div class="col-lg-3 col-md-6">
             <div class="footer-info">
-              <h3>Exemple<span>.</span></h3>
+              <h3 id="xarxes-style">Xarxes socials<span> .</span></h3>
+              <p></p>
               <div class="social-links mt-3">
                 <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-                <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+                <a href="#" class="https://www.facebook.com/lesteticaroseresteve/"><i class="bx bxl-facebook"></i></a>
+                <a href="https://www.instagram.com/lesteticaroseresteve/" class="instagram"><i class="bx bxl-instagram"></i></a>
            </div>
             </div>
-          </div>
 
 
         </div>
@@ -299,19 +298,15 @@
     
     //Funció per validar el usuari:
     document.addEventListener("DOMContentLoaded", function() {
-      if (checkCookies()) {
-          //Cambiar Button
-          RegistredChanges();
-          const mYuser = GettingUser();
-          //NEW Agafar dades usuari:
-          getDate(mYuser);
-          
-      } 
+      if(checkCookies()){
+        getDate();
+      }
+
 
     });
   //-------------------------------------------------------
   // Funció per aplicar cambis quan un usuari s'ha registrat.
-  function RegistredChanges(){
+  function RegistredChanges(username){
     var enlace = document.getElementById("Basic-Login-ref");
     enlace.textContent = "LogOut";
     enlace.onclick = function() {
@@ -319,6 +314,10 @@
       deleteCookies();
       goingLogin();
     };
+    //-------------------------
+    var reserva = document.getElementById("Reserva_btn");
+    reserva.href = 'reserva-page.html';
+    //--------
   }
   //-------------------------------------------------------
   // Funció API per obtenir correctament la proxima data
@@ -327,7 +326,7 @@
   // NOTA: Funcionalitat per mostrar o no si es anterior [PENDENT]
   function getDate(username){
     var settings = {
-              "url": "http://localhost:8000/GET/date/" + username, 
+              "url": "http://localhost:8000/GET/date/", 
               "method": "GET",
               "timeout": 0,
               "contentType": "application/json"
@@ -335,6 +334,12 @@
 
       $.ajax(settings).done(function (response) {
         console.log(response);
+        const Muser = validateUser(response);
+        if (Muser != null) {
+          const nextDate = getNextDateForUser(response, Muser);
+          //ARA A UTILITZAR EL VALOR
+          RegistredChanges(Muser);
+        }
       });
   }
   </script>

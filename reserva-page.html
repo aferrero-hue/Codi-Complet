@@ -65,13 +65,12 @@
   }
   //---------------------------------------------------------
   function SubmitHours(usuari, nextdate){
-    console.log(usuari);
     var settings = {
               "url": "http://localhost:8000/PUT/date/" + usuari, 
               "method": "PUT",
               "timeout": 0,
-              "data": JSON.stringify({ "nextdate": nextdate }),
-              "contentType": "application/json"
+              "contentType": "application/json",
+              "data": JSON.stringify({ nextdate: nextdate }) // Aquí se añade el cuerpo de la solicitud
           };
 
       $.ajax(settings).done(function (response) {

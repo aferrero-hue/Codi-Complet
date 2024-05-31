@@ -524,6 +524,7 @@ section {
   display: inline-block;
   background: #C311F0;
   margin: 4px 10px;
+  
 }
 
 .section-title p {
@@ -1404,7 +1405,12 @@ section {
 }
 
 #footer .footer-top .footer-info {
-  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column; /* Asegura que los elementos hijos se coloquen en columna */
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
 }
 
 #footer .footer-top .footer-info h3 {
@@ -1414,6 +1420,7 @@ section {
   line-height: 1;
   font-weight: 700;
   text-transform: uppercase;
+
 }
 
 #footer .footer-top .footer-info h3 span {
@@ -1540,7 +1547,22 @@ section {
   color: #fff;
 }
 
+.footer-info p::after{
+
+  content: "";
+  width: 100px;
+  height: 2px;
+  display: inline-block;
+  background: #C311F0;
+}
 /*--------------------------------------------------------------
+aaaaaaaaaaaaaaaaaaa
+  content: "";
+  width: 100px;
+  height: 2px;
+  display: inline-block;
+  background: #C311F0;
+  margin: 4px 10px;
 # Calendar
 --------------------------------------------------------------*/
 .calendar {

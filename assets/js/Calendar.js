@@ -1,4 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+  var availableHours = null;
+
+  fetch('horas.json')
+  .then(response => {
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+      return response.json();
+  })
+  .then(data => {
+      availableHours = data.availableHours;
+  })
+  .catch(error => {
+      console.error('There was a problem with the fetch operation:', error);
+  });
+  //-----------------------------------------------------------
   const calendar = document.getElementById("calendar");
   const hoursDiv = document.getElementById("hours");
   const monthYearSpan = document.getElementById("monthYear");
@@ -17,16 +34,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // Variables para asociar la proxima fecha:
   var selectedDatePOST = "";
 
-
   // Imprimir en consola para ver los valores
   console.log(`Fecha actual: ${currentDateString}`);
   console.log(`Hora actual: ${currentTime}`);
 
   // Horas disponibles (puedes ajustar esto según tus necesidades)
-  const availableHours = [
+  /*const availableHours = [
       "09:00", "10:00", "11:00", "12:00", "13:00",
       "14:00", "15:00", "16:00", "17:00"
-  ];
+  ];*/
   
   // Función para actualizar el calendario
   function updateCalendar() {
@@ -49,23 +65,26 @@ document.addEventListener("DOMContentLoaded", () => {
   function showHours(day) {
     //Recordatori: Validar per si de cas l'hora del usuari:
     UserHour(); 
-    console.log(userLatestHour);
     const selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
     const selectedDateString = selectedDate.toLocaleDateString('es-ES');
-    //console.log(username);
-    hoursDiv.innerHTML = `<h3>Horas disponibles para el día ${day} (${selectedDateString})</h3>`;
-    //NOTA: availableHours ha de pasar a ser el array que comté les hores
-    //console.log(test);
-    availableHours.forEach(hour => {
-      const hourDiv = document.createElement("div");
-      const myclass = validateHour(selectedDateString, hour);
-      hourDiv.classList.add(myclass);
-      hourDiv.textContent = hour;
-      //console.log(hourDiv.textContent);
-      hourDiv.addEventListener("click", () => selectHour(day, hourDiv, myclass));
-      hoursDiv.appendChild(hourDiv);
-    });
-    hoursDiv.style.display = "block";
+    //---------------------------
+    //Verificar el dia de la setmana: 2-5 correcte
+    //PENDENT: Validar els dies correctes
+    if(selectedDate.getDay() == 2 ||selectedDate.getDay() == 3 ||selectedDate.getDay() == 4 ||selectedDate.getDay() == 5){
+      hoursDiv.innerHTML = `<h3>Horas disponibles para el día ${day} (${selectedDateString})</h3>`;
+      availableHours.forEach(hour => {
+        const hourDiv = document.createElement("div");
+        const myclass = validateHour(selectedDateString, hour);
+        hourDiv.classList.add(myclass);
+        hourDiv.textContent = hour;
+        //console.log(hourDiv.textContent);
+        hourDiv.addEventListener("click", () => selectHour(day, hourDiv, myclass));
+        hoursDiv.appendChild(hourDiv);
+      });
+      hoursDiv.style.display = "block";
+    }else{
+      hoursDiv.style.display = "none";
+    }
   }
 
   // Validar les hores
@@ -137,8 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const day = selectedDate.getDate();
 
             selectedDatePOST = `${year}/${month}/${day}-${selectedHour}`;
-            //selectedDatePOST = "xd";
-            //console.log(selectedDatePOST);
             //-----------------------------------------------------------------------------------------
             const modalTextElement = document.getElementById("modalText");
             modalTextElement.textContent = text;
@@ -151,9 +168,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
   }
 
-  // Cambiar mes
+  // Cambiar mes [PENDENTPENDENT] No pot pasar del mes actual.
+  // NOTA: Ocultar el formulari.
   prevMonthButton.addEventListener("click", () => {
     const newDate = new Date(currentDate);
+    console.log(currentDate);
     newDate.setMonth(newDate.getMonth() - 1);
   
     if (newDate.getFullYear() === currentYear) {
@@ -164,6 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  //[PENDENTPENDENT] Modificar a 6 nomes 6 mesos despues no per any.
   nextMonthButton.addEventListener("click", () => {
     const newDate = new Date(currentDate);
     newDate.setMonth(newDate.getMonth() + 1);
@@ -179,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //Funcionalitats Modal:
   // Añadir funcionalidad al botón para mostrar el modal
   document.getElementById("confirmButton").addEventListener("click", function() {
-    alert("Selección confirmada");
+    console.log(username, selectedDatePOST);
     SubmitHours(username, selectedDatePOST);
     closeModal();
   });
@@ -241,7 +261,6 @@ function setTakenDates(response){
     //console.log(selectedDates);
 }
 //Validació Data Anterior
-//NOTA: Moure a index.js ? [PENDENT]
 function validatingOldDates(mydate){
     //console.log(mydate);
     const currentDateString = new Date().toLocaleDateString('es-ES');

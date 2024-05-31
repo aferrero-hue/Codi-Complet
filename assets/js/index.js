@@ -106,8 +106,35 @@ function isJWT(token) {
   return jwtPattern.test(token);
 }
 //-----------
-//GET Username:
-function GettingUser(){
+//Verificar Usuari:
+function validateUser(userDataArray) {
+  const cookieNames = userDataArray.map(user => user.name);
+  const cookies = document.cookie.split(';').map(cookie => cookie.trim());
+
+  for (const cookie of cookies) {
+      const [cookieName] = cookie.split('=');
+      if (cookieNames.includes(cookieName)) {
+          console.log(`Se encontró una cookie con el nombre ${cookieName}.`);
+          // Puedes devolver true aquí si quieres indicar que se encontró una cookie
+          return cookieName;
+      }
+  }
+
+  console.log("No se encontraron cookies con ninguno de los nombres proporcionados.");
+  // Devuelve false si no se encontró ninguna cookie con los nombres proporcionados
+  return null;
+}
+function getNextDateForUser(userDataArray, userName) {
+  for (const user of userDataArray) {
+      if (user.name === userName) {
+          return user.nextdate;
+      }
+  }
+  return null; // Si no se encontró el usuario en el array
+}
+//-----------
+//GET Username: ORIGINAL VERSION
+/*function GettingUser(){
   const allCookies = getAllCookies();
 
   let username = getCookieName(allCookies);
@@ -119,7 +146,7 @@ function GettingUser(){
   } else {
       console.log('No se encontró una cookie con un valor de token válido.');
   }
-}
+}*/
 //---------------------------------------------------------
 function goingLogin(){
   window.location.href = "login-page.html";

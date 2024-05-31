@@ -242,11 +242,13 @@ async function UpdateUser(usuari, data){
     const database = client.db("Estetica");
     const collection = database.collection("Usuaris");
 
+    console.log(data);
     const filter = { name: usuari };
     const updateDoc = {
         $set: { nextdate : data } 
     };
     const result = await collection.updateOne(filter, updateDoc);
+    console.log(updateDoc);
      
 }
 //---------------------------
@@ -290,18 +292,39 @@ async function UpdateUserDate(userName){
 //--------------------------
 //GET by username (No retorna tots els objectes si no la data)
 //S'ha de verificar si funciona no estic segur ;---;
-app.get("/GET/date/:usuari", async (req, res) => {
+app.get("/GET/date/", async (req, res) => {
     try {
-        const usuari = req.params.usuari;
-
-        const data = await getUserDate(usuari);
+        const data = await getUserDate();
         res.json(data);
     } catch (error) {
         console.error("Error:", error);
         res.status(500).json({ error: "Error interno del servidor" });
     }
 });
-async function getUserDate(userName){
+async function getUserDate() {
+    try {
+        await client.connect();
+        console.log("Conectado a MongoDB");
+    
+        const database = client.db("Estetica");
+        const collection = database.collection("Usuaris");
+    
+        const usersData = await collection.find({}, { projection: { _id: 0, name: 1, nextdate: 1 } }).toArray();
+        return usersData;
+    
+    } catch (error) {
+        console.error('Error al conectar u obtener la base de datos:', error);
+        throw error; // Lanza el error para que sea manejado externamente si es necesario
+    }
+}
+
+
+
+//--------------------------
+module.exports = { login };
+//--------------------------
+//BACKUP: Original function:
+/*async function getUserDate(userName){
     try {
         await client.connect();
         console.log("Conectado a MongoDB");
@@ -315,6 +338,4 @@ async function getUserDate(userName){
     } catch (error) {
         console.error('Error al conectar o obtenir la base de datos:', error);
     }
-}
-//--------------------------
-module.exports = { login };
+}*/
