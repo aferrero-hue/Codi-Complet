@@ -104,13 +104,6 @@ async function login(Nom, Contrasenya) {
             if (existingUser.passwd === Contrasenya) {
                 // La contraseña es correcta, el usuario puede iniciar sesión
                 console.log("¡Contraseña correcta! Usuario autenticado.");
-                //Token V1
-                //const token = jwt.sign({ userId: existingUser.name }, 'secret_key', { expiresIn: '1h' });
-                //return token;
-                //-------------------------
-                //Token V2
-                //const token = generateAccessToken(existingUser.name);
-                //setAccessToken(token);
                 const token = jwt.sign({ userId: existingUser.name }, 'secret_key', { expiresIn: '1h' });
 
                 //return existingUser.name;
@@ -137,7 +130,7 @@ async function login(Nom, Contrasenya) {
     }
 }
 //---------------------------------------------------------------
-//Funció per encriptar contraseña:
+//Funció per encriptar la contraseña a sha256:
 function encriptarConSHA256(contraseña) {
     const hash = crypto.createHash('sha256');
     hash.update(contraseña);

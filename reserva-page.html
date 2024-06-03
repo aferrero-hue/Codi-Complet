@@ -12,21 +12,23 @@
   crossorigin="anonymous"></script>
   <link href="assets/css/CalendarStyle.css" rel="stylesheet">
 </head>
+
 <body>
   <!-- AQUEST BUTTON ES TEMPORAL Y PER VERIFICAR ELS CAMBIS -->
   <button onclick="borrarData()">DELETE ME</button>
 
-<div class="month-selector">
+  <div class="month-selector">
     <button id="prevMonth">Anterior</button>
     <span id="monthYear"></span>
     <button id="nextMonth">Siguiente</button>
 </div>
-<div class="calendar" id="calendar">
+<table class="calendar" id="calendar">
     <!-- Los días se generarán dinámicamente con JavaScript -->
-</div>
+</table>
 <div class="hours" id="hours">
     <!-- Las horas se mostrarán aquí -->
 </div>
+
 
 <!-- Modal -->
 <div id="modal" class="modal">

@@ -5,13 +5,13 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Inner Page - Gp Bootstrap Template</title>
+  <title>EstèticArea</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="assets/img/logotips/E.png" rel="icon">
+  <link href="assets/img/logotips/E.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -41,7 +41,12 @@
   <header id="header" class="fixed-top header-inner-pages">
     <div class="container d-flex align-items-center justify-content-lg-between">
 
-      <h1 class="logo me-auto me-lg-0"><a href="index.html">Gp<span>.</span></a></h1>
+      <h1 class="logo me-auto me-lg-0">
+        <a href="index.html">
+          <img src="assets/img/logotips/E.png" alt="Logo">
+
+        </a>
+      </h1>
       <!-- Uncomment below if you prefer to use an image logo -->
       <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
@@ -50,7 +55,7 @@
           <li><a class="nav-link scrollto active" href="index.html#hero">Home</a></li>
           <li><a class="nav-link scrollto" href="index.html#about">Informació</a></li>
           <li><a class="nav-link scrollto" href="index.html#services">Serveis</a></li>
-          <li><a class="nav-link scrollto " href="index.html#portfolio">Reserva</a></li>
+          <li><a class="nav-link scrollto " href="index.html#reserva">Reserva</a></li>
           <li><a class="nav-link scrollto" href="index.html#contact">Contacte</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
@@ -68,41 +73,40 @@
         <div class="d-flex justify-content-between align-items-center">
           <h2>Registre REGISTER</h2>
           <ol>
-            <li><a href="index.html">Home</a></li>
-            <li>Inner Page</li>
+            <li><a href="login-page.html">Ja disposes d'un compte d'usuari?</a></li>
           </ol>
         </div>
-
       </div>
     </section><!-- End Breadcrumbs -->
 
-    <section class="inner-page">
-      <div class="container">
-        <form>
+    <section class="login-page">
+      <div class="container" id="login-form">
           <div class="form-group">
-            <label for="UserInput">Nou Usuari:</label>
-            <input type="email" class="form-control" id="UserInput" placeholder="Usuari">
+            <label for="UserInput">Nou Usuari:</label><span id="Rnom"></span>
+            <input type="email" class="form-control" id="UserInput" placeholder="nom d'usuari">
           </div>
           <br>
           <div class="form-group">
-            <label for="EmailInput">Email:</label>
-            <input type="email" class="form-control" id="EmailInput" placeholder="Contrasenya">
+            <label for="EmailInput">Email:</label><span id="Rmail"></span>
+            <input type="email" class="form-control" id="EmailInput" placeholder="correu electronic">
           </div>
           <br>
           <div class="form-group">
-            <label for="PasswdInput">Password</label>
-            <input type="password" class="form-control" id="PasswdInput" placeholder="Password">
+            <label for="PasswdInput">Password</label><span id="Rpasswd"></span>
+            <input type="password" class="form-control" id="PasswdInput" placeholder="contrasenya">
           </div>
           <br>
           <div class="form-group">
-            <label for="PasswdValidInput">Torna a introduir la contrasenya:</label>
-            <input type="password" class="form-control" id="PasswdValidInput" placeholder="Confirmar Password">
+            <label for="PasswdValidInput">Torna a introduir la contrasenya:</label><span id="Rpasswd2"></span>
+            <input type="password" class="form-control" id="PasswdValidInput" placeholder="contrasenya">
           </div>
           <br>
-        </form>
+          <button type="submit" class="btn-primary" id="btn-register" onclick="validateRegister()">Register</button>
+
       </div>
     </section>
-    <button type="submit" class="btn btn-primary" onclick="validateRegister()">Register</button>
+
+
     <script>
       function startRegister(){
     

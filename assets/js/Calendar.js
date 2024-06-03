@@ -46,20 +46,38 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Función para actualizar el calendario
   function updateCalendar() {
-      calendar.innerHTML = "";
-      const year = currentDate.getFullYear();
-      const month = currentDate.getMonth();
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
-      monthYearSpan.textContent = `${currentDate.toLocaleString('default', { month: 'long' })} ${year}`;
+    calendar.innerHTML = "";
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const firstDayOfMonth = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    monthYearSpan.textContent = `${currentDate.toLocaleString('default', { month: 'long' })} ${year}`;
 
-      for (let day = 1; day <= daysInMonth; day++) {
-          const dayDiv = document.createElement("div");
-          dayDiv.classList.add("day");
-          dayDiv.textContent = day;
-          dayDiv.addEventListener("click", () => showHours(day));
-          calendar.appendChild(dayDiv);
-      }
-  }
+    const weekDays = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    let calendarHTML = '<tr>';
+    weekDays.forEach(day => {
+        calendarHTML += `<th>${day}</th>`;
+    });
+    calendarHTML += '</tr><tr>';
+
+    for (let i = 0; i < firstDayOfMonth; i++) {
+        calendarHTML += '<td></td>';
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+        if ((day + firstDayOfMonth - 1) % 7 === 0) {
+            calendarHTML += '</tr><tr>';
+        }
+        calendarHTML += `<td class="day" data-day="${day}">${day}</td>`;
+    }
+
+    calendarHTML += '</tr>';
+    calendar.innerHTML = calendarHTML;
+
+    document.querySelectorAll('.day').forEach(day => {
+        day.addEventListener('click', () => showHours(day.dataset.day));
+    });
+}
 
   // Mostrar las horas disponibles
   function showHours(day) {
@@ -168,33 +186,40 @@ document.addEventListener("DOMContentLoaded", () => {
       }
   }
 
-  // Cambiar mes [PENDENTPENDENT] No pot pasar del mes actual.
-  // NOTA: Ocultar el formulari.
   prevMonthButton.addEventListener("click", () => {
     const newDate = new Date(currentDate);
     console.log(currentDate);
     newDate.setMonth(newDate.getMonth() - 1);
   
-    if (newDate.getFullYear() === currentYear) {
+    const today = new Date(); // Fecha actual del sistema
+  
+    if (newDate.getFullYear() > today.getFullYear() || 
+        (newDate.getFullYear() === today.getFullYear() && newDate.getMonth() >= today.getMonth())) {
       currentDate = newDate;
       updateCalendar();
     } else {
-      console.log("No se puede cambiar el calendario fuera del año actual");
+      console.log("No se puede cambiar el calendario fuera del mes actual");
     }
   });
+  
 
   //[PENDENTPENDENT] Modificar a 6 nomes 6 mesos despues no per any.
   nextMonthButton.addEventListener("click", () => {
     const newDate = new Date(currentDate);
     newDate.setMonth(newDate.getMonth() + 1);
   
-    if (newDate.getFullYear() === currentYear) {
+    const maxDate = new Date();
+    maxDate.setMonth(maxDate.getMonth() + 6);
+  
+    if (newDate <= maxDate) {
       currentDate = newDate;
       updateCalendar();
     } else {
-      console.log("No se puede cambiar el calendario fuera del año actual");
+      console.log("No se puede cambiar el calendario más allá de los próximos 6 meses");
     }
   });
+  
+  
   //----------------------------------------------------
   //Funcionalitats Modal:
   // Añadir funcionalidad al botón para mostrar el modal
@@ -300,7 +325,3 @@ function validatingOldHours(myhour, mydate) {
     }
 }
 //------------------------------
-//PEDNENT: Verificar quina hora disposa el usuari :O
-//PENDENT: Cancelar cita [FUNCIO API TAMBÉ]
-
-//PROBLEMA: El tema de DOMContentLoaded hem mata.

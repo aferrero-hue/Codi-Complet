@@ -101,3 +101,131 @@
     cursor: pointer;
   }
   
+  /************************************************************************************
+  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  ************************************************************************************/
+  /* General */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Buttons */
+button {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  margin: 5px;
+}
+
+button:hover {
+  background-color: #5a6268;
+}
+
+/* Month Selector */
+.month-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#monthYear {
+  margin: 0 10px;
+  font-size: 18px;
+  color: #6c757d;
+}
+
+/* Calendar Table */
+table.calendar {
+  width: 80%;
+  max-width: 1000px;
+  border-collapse: collapse;
+  font-size: 20px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+table.calendar th, table.calendar td {
+  border: 1px solid #dee2e6;
+  padding: 20px;
+  text-align: center;
+  background-color: white;
+}
+
+table.calendar th {
+  background-color: #6c757d;
+  color: white;
+}
+
+table.calendar td:hover {
+  background-color: #e9ecef;
+  cursor: pointer;
+}
+
+/* Hover */
+.hour:hover {
+  background-color: #ba12e9;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 500px;
+  border-radius: 10px;
+}
+
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+h2 {
+  color: #6c757d;
+}
+
+p {
+  color: #6c757d;
+}
+
+/* Delete Button */
+button[onclick="borrarData()"] {
+  background-color: #6f42c1;
+}
+
+button[onclick="borrarData()"]:hover {
+  background-color: #5a35a0;
+}

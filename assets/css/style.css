@@ -399,7 +399,7 @@ h6 {
 #home {
   width: 100%;
   min-height: 100vh;
-  background: url("../img/hero-bg.jpg") top center;
+  background: url("../img/start_bg.jpg") top center;
   background-size: cover;
   position: relative;
 }
@@ -645,7 +645,6 @@ section {
 .services .icon-box {
   text-align: center;
   border: 1px solid #ebebeb;
-  padding: 120px 10px;
   transition: all ease-in-out 0.3s;
   background: #fff;
 }
@@ -653,8 +652,8 @@ section {
 .services .icon-box .icon {
   margin: 0 auto;
   width: 100%;
-  height: 100%;
-  background: #C311F0;
+  height: 300px;
+  background: #18f011;
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -695,6 +694,7 @@ section {
   box-shadow: 0px 0 25px 0 rgba(0, 0, 0, 0.1);
   transform: translateY(-10px);
 }
+
 
 /*--------------------------------------------------------------
 # Cta: [PENDENT] CAMBIAR TAMANY & ICONES PER IMATGES
@@ -1556,14 +1556,6 @@ section {
   background: #C311F0;
 }
 /*--------------------------------------------------------------
-aaaaaaaaaaaaaaaaaaa
-  content: "";
-  width: 100px;
-  height: 2px;
-  display: inline-block;
-  background: #C311F0;
-  margin: 4px 10px;
-# Calendar
 --------------------------------------------------------------*/
 .calendar {
   width: 300px;
@@ -1599,4 +1591,64 @@ aaaaaaaaaaaaaaaaaaa
     font-size: 14px;
     display: inline-block;
     border: 2px solid #C311F0;
+}
+
+/*--------------------------------------------------------------
+Extra Login/register CSS
+--------------------------------------------------------------*/
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login-page .container {
+  background-color: #fff;
+  padding-left: 20px;
+  padding-top: 20px;
+  padding-right: 20px;
+
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 600px;
+  text-align: center; /* Centra el contenido horizontalmente */
+}
+
+.login-page .btn-primary {
+  color: white;
+  background-color: #C311F0;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 150px;
+}
+.login-page .btn-primary:hover {
+  background-color: #5a0ca0;
+}
+
+.login-page label {
+  display: block;
+  margin-bottom: 5px;
+  text-align: left; /* Alinea el texto de las etiquetas al centro */
+  width: 100%; 
+  font-size: 20px; /* Ajusta este valor según lo grande que quieras el texto */
+}
+
+.login-page input{
+    display: block;
+    margin-top: 10px;
+    text-align: center; 
+}
+
+#btn-register{
+  margin-bottom: 20px;
+}
+
+.login-page span {
+  color: red;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
 }
