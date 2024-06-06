@@ -55,7 +55,7 @@
   //Obtenir dades hores:
   function GetSavedHours(){
     var settings = {
-          "url": "http://localhost:8000/GET/Dates", 
+          "url": "http://localhost:8000/GET/User", 
           "method": "GET",
           "timeout": 0,
       };
@@ -68,33 +68,44 @@
   //---------------------------------------------------------
   function SubmitHours(usuari, nextdate){
     var settings = {
-              "url": "http://localhost:8000/PUT/date/" + usuari, 
-              "method": "PUT",
-              "timeout": 0,
-              "contentType": "application/json",
-              "data": JSON.stringify({ nextdate: nextdate }) // Aquí se añade el cuerpo de la solicitud
-          };
+        "url": "http://localhost:8000/PUT/User",
+        "method": "PUT",
+        "timeout": 0,
+        "contentType": "application/json",
+        "data": JSON.stringify({ 
+            usuari: usuari, 
+            nextdate: nextdate 
+        }), // Aquí se añade el cuerpo de la solicitud con ambos valores
+        "headers": {
+            "Content-Type": "application/json" // Aseguramos que el servidor interpreta los datos como JSON
+        }
+    };
 
-      $.ajax(settings).done(function (response) {
+    $.ajax(settings).done(function (response) {
         console.log(response);
         location.reload();
-      });
+    });
+}
 
-  }
   //---------------------------------------------------------
   function eliminarData(usuari){
     var settings = {
-              "url": "http://localhost:8000/DEL/date/" + usuari, 
-              "method": "PUT",
-              "timeout": 0,
-              "contentType": "application/json"
-          };
+        "url": "http://localhost:8000/POST/User/Date", // Eliminamos usuari de la URL
+        "method": "PUT",
+        "timeout": 0,
+        "contentType": "application/json",
+        "data": JSON.stringify({ usuari: usuari }), // Enviamos usuari en el cuerpo de la solicitud
+        "headers": {
+            "Content-Type": "application/json" // Aseguramos que el servidor interpreta los datos como JSON
+        }
+    };
 
-      $.ajax(settings).done(function (response) {
+    $.ajax(settings).done(function (response) {
         console.log(response);
         location.reload();
-      });
-  }
+    });
+}
+
   //---------------------------------------------------------
 </script>
 </body>

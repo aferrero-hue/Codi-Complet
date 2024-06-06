@@ -115,9 +115,15 @@
         var email = document.getElementById("EmailInput").value;
         var contrasenya = document.getElementById("PasswdInput").value;
         var settings = {
-          "url": "http://localhost:8000/POST/" + nombre + "/" + email + "/" + contrasenya, 
+          "url": "http://localhost:8000/POST/User", 
           "method": "POST",
           "timeout": 0,
+          "data": JSON.stringify({
+            "nombre": nombre,
+            "email": email,
+            "contrasenya": contrasenya
+          }), // Enviar los tres elementos como parte del cuerpo
+          "contentType": "application/json"
         };
     
       

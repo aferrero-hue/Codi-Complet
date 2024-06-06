@@ -13,6 +13,7 @@ function validateRegister(){
     $("#Rpasswd2").text("");
 
     //--------------------
+    //PENDENT: MAX 20 CARACTERS NOM
     if(!nom || nom.trim() === '' || nom.trim().length <= 3){
       $("#Rnom").text("El nom d'usuari no es correcte");
       return 0;
