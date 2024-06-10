@@ -1,11 +1,38 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>EstèticArea</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/logotips/E.png" rel="icon">
+  <link href="assets/img/logotips/E.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
-  <script src="assets/js/Calendar.js"></script>   
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
   <script src="assets/js/index.js"></script>    
+  <script src="assets/js/Calendar.js"></script>   
   <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -13,18 +40,50 @@
   <link href="assets/css/CalendarStyle.css" rel="stylesheet">
 </head>
 
+
 <body>
-  <!-- AQUEST BUTTON ES TEMPORAL Y PER VERIFICAR ELS CAMBIS -->
-  <button onclick="borrarData()">DELETE ME</button>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top header-inner-pages">
+    <div class="container d-flex align-items-center justify-content-lg-between">
+
+      <h1 class="logo me-auto me-lg-0">
+        <a href="index.html">
+          <img src="assets/img/logotips/E.png" alt="Logo">
+
+        </a>
+      </h1>
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+      <nav id="navbar" class="navbar order-last order-lg-0">
+        <ul>
+          <li><a class="nav-link scrollto" href="index.html#hero">Home</a></li>
+          <li><a class="nav-link scrollto" href="index.html#about">Informació</a></li>
+          <li><a class="nav-link scrollto active" href="reserva-page.html">Serveis</a></li>
+          <li><a class="nav-link scrollto " href="index.html#reserva">Reserva</a></li>
+          <li><a class="nav-link scrollto" href="index.html#contact">Contacte</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+  <main id="main">
 
   <div class="month-selector">
     <button id="prevMonth">Anterior</button>
     <span id="monthYear"></span>
-    <button id="nextMonth">Siguiente</button>
+    <button id="nextMonth">Seguent</button>
 </div>
 <table class="calendar" id="calendar">
     <!-- Los días se generarán dinámicamente con JavaScript -->
 </table>
+<div class="del" style="text-align: center;">
+  <button id="btn_del" onclick="OpenCancelModal()">Necesites cancelar la teva?</button>
+</div>
+
 <div class="hours" id="hours">
     <!-- Las horas se mostrarán aquí -->
 </div>
@@ -36,12 +95,24 @@
     <span class="close-button" id="closeModal">&times;</span>
     <h2>Confirmar selecció?</h2>
     <p id="modalText"></p>
+    <p id="modalTextAlert">És modificara la teva propera visita per la data seleccionada.</p>
     <button id="confirmButton">Sí</button>
     <button id="cancelButton">No</button>
   </div>
 </div>
 
-<script>
+<!-- Modal Modify/Cancel -->
+<div id="modal-cancel" class="modal">
+  <div class="modal-content">
+    <span class="close-button" id="closeModalC">&times;</span>
+    <h2>Confirmar selecció?</h2>
+    <p id="modalTextC">Ja disposes d'una reserva feta, estas segur de voler cancelar la teva proxima cita?</p>
+    <button id="confirmButtonC">Sí</button>
+    <button id="cancelButtonC">No</button>
+  </div>
+</div>
+
+    <script>
   document.addEventListener("DOMContentLoaded", function() {
     if (checkCookies()) {
       DefineUser();       
@@ -90,7 +161,7 @@
   //---------------------------------------------------------
   function eliminarData(usuari){
     var settings = {
-        "url": "http://localhost:8000/POST/User/Date", // Eliminamos usuari de la URL
+        "url": "http://localhost:8000/PUT/User/Date", // Eliminamos usuari de la URL
         "method": "PUT",
         "timeout": 0,
         "contentType": "application/json",
@@ -105,8 +176,27 @@
         location.reload();
     });
 }
+    </script>
 
-  //---------------------------------------------------------
-</script>
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+
 </body>
+
 </html>

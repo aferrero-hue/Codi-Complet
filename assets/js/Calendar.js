@@ -1,6 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   var availableHours = null;
+  var devoloperMode;
+
+  //Valors mode Desenvolupador:
+  var UserShow = "";
+  var UserNum = "";
+
 
   fetch('horas.json')
   .then(response => {
@@ -44,57 +50,81 @@ document.addEventListener("DOMContentLoaded", () => {
       "14:00", "15:00", "16:00", "17:00"
   ];*/
   
-  // Función para actualizar el calendario
-  function updateCalendar() {
-    calendar.innerHTML = "";
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-    const firstDayOfMonth = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    monthYearSpan.textContent = `${currentDate.toLocaleString('default', { month: 'long' })} ${year}`;
+// Función para actualizar el calendario
+function updateCalendar() {
+  calendar.innerHTML = "";
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const firstDayOfMonth = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  monthYearSpan.textContent = `${currentDate.toLocaleString('ca-ES', { month: 'long' })} ${year}`;
+  
+  // Nombres de los días de la semana en catalán, comenzando por lunes
+  const weekDays = ['Dl', 'Dt', 'Dc', 'Dj', 'Dv', 'Ds', 'Dg'];
+  let calendarHTML = '<tr>';
+  weekDays.forEach(day => {
+      calendarHTML += `<th>${day}</th>`;
+  });
+  calendarHTML += '</tr><tr>';
 
-    const weekDays = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-    let calendarHTML = '<tr>';
-    weekDays.forEach(day => {
-        calendarHTML += `<th>${day}</th>`;
-    });
-    calendarHTML += '</tr><tr>';
+  // Ajustar el primer día de la semana para que comience en lunes
+  const adjustedFirstDay = (firstDayOfMonth + 6) % 7;
 
-    for (let i = 0; i < firstDayOfMonth; i++) {
-        calendarHTML += '<td></td>';
-    }
+  for (let i = 0; i < adjustedFirstDay; i++) {
+      calendarHTML += '<td></td>';
+  }
 
-    for (let day = 1; day <= daysInMonth; day++) {
-        if ((day + firstDayOfMonth - 1) % 7 === 0) {
-            calendarHTML += '</tr><tr>';
-        }
-        calendarHTML += `<td class="day" data-day="${day}">${day}</td>`;
-    }
+  for (let day = 1; day <= daysInMonth; day++) {
+      if ((day + adjustedFirstDay - 1) % 7 === 0 && day !== 1) {
+          calendarHTML += '</tr><tr>';
+      }
+      calendarHTML += `<td class="day" data-day="${day}">${day}</td>`;
+  }
 
-    calendarHTML += '</tr>';
-    calendar.innerHTML = calendarHTML;
+  calendarHTML += '</tr>';
+  calendar.innerHTML = calendarHTML;
 
-    document.querySelectorAll('.day').forEach(day => {
-        day.addEventListener('click', () => showHours(day.dataset.day));
-    });
+  document.querySelectorAll('.day').forEach(day => {
+      day.addEventListener('click', () => showHours(day.dataset.day));
+  });
 }
+
+
+  //Activa el mode Administrador:
+  function DefineAdmin(){
+    if(username == "RoserEsteve"){
+      devoloperMode = true;
+    }
+    //console.log(devoloperMode);
+  }
 
   // Mostrar las horas disponibles
   function showHours(day) {
     //Recordatori: Validar per si de cas l'hora del usuari:
     UserHour(); 
+    DefineAdmin();
     const selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
     const selectedDateString = selectedDate.toLocaleDateString('es-ES');
     //---------------------------
     //Verificar el dia de la setmana: 2-5 correcte
-    //PENDENT: Validar els dies correctes
     if(selectedDate.getDay() == 2 ||selectedDate.getDay() == 3 ||selectedDate.getDay() == 4 ||selectedDate.getDay() == 5){
-      hoursDiv.innerHTML = `<h3>Horas disponibles para el día ${day} (${selectedDateString})</h3>`;
+      hoursDiv.innerHTML = `<h3>Hores disponibles per la data: (${selectedDateString})</h3>`;
       availableHours.forEach(hour => {
         const hourDiv = document.createElement("div");
         const myclass = validateHour(selectedDateString, hour);
         hourDiv.classList.add(myclass);
         hourDiv.textContent = hour;
+        //--------------------------------
+        //aaaaaaaaaaaaaaaaaaaaaa PENDENT Verificar funcionament
+        if(devoloperMode){
+          if(UserShow != ""){
+            hourDiv.textContent = hour + " - Usuari: " + UserShow + ", Contacte: " + UserNum;
+            hourDiv.classList.add("DeveloperMode");
+            UserShow = "";
+            UserNum = "";
+          }
+        }
+        //DeveloperMode
         //console.log(hourDiv.textContent);
         hourDiv.addEventListener("click", () => selectHour(day, hourDiv, myclass));
         hoursDiv.appendChild(hourDiv);
@@ -105,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Validar les hores
+  // Validar les hores bbbbbbbbbbbbbbbbbbbbbbbbbb
   function validateHour(myDate, myHour){
     const myNewDate = changeDateFormat(myDate);
     const targetDateTime = `${myNewDate}-${myHour}`;
@@ -119,6 +149,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         //Validació data no valida (Reservada)
         if (item.nextdate === targetDateTime) {
+          if(devoloperMode){
+            UserShow = item.name;
+            UserNum = item.tel;
+          }
           return "fakehour"; // Se encontró una coincidencia
         }
         if(validatingOldHours(myHour, myNewDate)){
@@ -153,19 +187,20 @@ document.addEventListener("DOMContentLoaded", () => {
       const selectedDateTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), day, selectedHour.split(':')[0], selectedHour.split(':')[1]);
 
       if (selectedDateTime < now) {
-          alert('La fecha y hora seleccionadas son anteriores a la fecha y hora actuales.');
+          //alert('La fecha y hora seleccionadas son anteriores a la fecha y hora actuales.');
       } else {
-        if(clase == "fakehour"){
-            //PENDENT: Verificar funcionament
-            alert('Fecha no disponible :(.');
+        if(clase == "fakehour" || clase == "myhour"){
+          if(clase == "myhour"){
+            OpenCancelModal();
+          }
+            
         }else{
           // Seleccionar la hora actual
           const userFound = selectedDates.some(date => date.name === username);
       
           if (userFound) {
             hourDiv.classList.add("selected");
-            //alert(`Fecha seleccionada: ${selectedDateString}\nHora seleccionada: ${selectedHour}`);
-            const text = `Fecha seleccionada: ${selectedDateString}\nHora seleccionada: ${selectedHour}`;
+            const text = `Data seleccionada: ${selectedDateString}\nHora seleccionada: ${selectedHour}`;
             //-----------------------------------------------------------------------------------------
             //Definir els valors, pricnipalent invertir data
             // Obtener los componentes de la fecha
@@ -177,7 +212,14 @@ document.addEventListener("DOMContentLoaded", () => {
             //-----------------------------------------------------------------------------------------
             const modalTextElement = document.getElementById("modalText");
             modalTextElement.textContent = text;
+            if(userLatestHour != null){
+              document.getElementById("modalTextAlert").style.display = "block";
+            }else{
+              document.getElementById("modalTextAlert").style.display = "none";
+            }
+            //Obrir final,ent el modal
             document.getElementById("modal").style.display = "block";
+
           } else {
               //No hi ha un usuari identificat correctament: Excepció
               goingLogin();
@@ -203,7 +245,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   
 
-  //[PENDENTPENDENT] Modificar a 6 nomes 6 mesos despues no per any.
   nextMonthButton.addEventListener("click", () => {
     const newDate = new Date(currentDate);
     newDate.setMonth(newDate.getMonth() + 1);
@@ -236,12 +277,36 @@ document.addEventListener("DOMContentLoaded", () => {
   function closeModal() {
     document.getElementById("modal").style.display = "none";
   }
+  document.getElementById("closeModal").addEventListener("click", closeModal);
+
+  
+  //Modal Cancelar:
+  document.getElementById("confirmButtonC").addEventListener("click", function() {
+    borrarData();
+    closeModal();
+  });
+
+  document.getElementById("cancelButtonC").addEventListener("click", function() {
+    closeModalExtra();
+  });
+
+  document.getElementById("closeModalC").addEventListener("click", closeModalExtra);
+
+
+  function closeModalExtra() {
+    document.getElementById("modal-cancel").style.display = "none";
+  }
 
   //-----------------------------
   //userLatestHour
   function UserHour(){
     const item = selectedDates.find(element => element.name === username);
     userLatestHour = item ? item.nextdate : null;
+    //console.log(userLatestHour);
+    if(userLatestHour != null){
+      const element = document.getElementById("btn_del");
+      element.style.display = "block";
+    }
   }
   //Validar la hora seleccionada
   function checkUserNextHour(thisDate){
@@ -269,6 +334,8 @@ function DefineUser(){
 
     if (username) {
         console.log('Nombre de la cookie con token:', username);
+        //devoloperMode
+
     } else {
         console.log('No se encontró una cookie con un valor de token válido.');
     }
@@ -277,7 +344,7 @@ function DefineUser(){
 //Funcionalitat eliminar cita:
 function borrarData(){
   //console.log(username);
-  eliminarData(username)
+  eliminarData(username);
 }
 //--------------------------------------------------------
 //Obtenció de dades hores seleccionades/validació:
@@ -325,3 +392,6 @@ function validatingOldHours(myhour, mydate) {
     }
 }
 //------------------------------
+function OpenCancelModal(){
+  document.getElementById("modal-cancel").style.display = "block";
+}

@@ -29,16 +29,14 @@ app.get("/", (req, res) => {
 });
 //--------------------------------------------------------------------
 //--------------------------------------------------------------------
-//GET: Obtenir Dades.
+//GET: Obtenir Dades: Filtrar Admin
 //------------------------
-//Agafar totes les dades dels usuaris: [PENDENT] CAMBIAR NOM PER USER
 app.get("/GET/User", async (req, res) => {
     try {
-        const data = await GetDates(); // Espera a que se resuelva la promesa
+        const data = await GetDates();
         console.log("Proceso completado");
-        res.json(data); // Enviar una respuesta JSON con los datos obtenidos
+        res.json(data);
     } catch (error) {
-        // Manejar cualquier error que ocurra durante la conexión o la consulta
         console.error("Error:", error);
         res.status(500).json({ error: "Error interno del servidor" });
     }
@@ -47,20 +45,15 @@ async function GetDates(){
     await client.connect();
     console.log("Conectado a MongoDB");
     
-    // Seleccionar la base de datos y la colección
     const database = client.db("Estetica");
     const collection = database.collection("Usuaris");
     
-    // Obtener todos los documentos de la colección
     const datos = await collection.find({}).toArray();
-    //console.log("Datos:", datos);
-    
-    // Mapear los datos para obtener solo el nombre y la próxima fecha
-    const datesWithName = datos.map(doc => ({ name: doc.name, nextdate: doc.nextdate }));
+
+    const datesWithName = datos.map(doc => ({ name: doc.name, tel: doc.tel, nextdate: doc.nextdate }));
     
     return datesWithName;
 }
-//--------------------------------------------------------------------
 //--------------------------------------------------------------------
 //POST: Enmagetzamar dades en la BDD
 app.post("/POST/User", async (req, res) => {
@@ -68,18 +61,17 @@ app.post("/POST/User", async (req, res) => {
         const nombre = req.body.nombre;
         const contrasenya = req.body.contrasenya;
         const email = req.body.email;
+        const telefon = req.body.telefon;
 
-
-        const data = await POSTuser(nombre, email, contrasenya); // Espera a que se resuelva la promesa
+        const data = await POSTuser(nombre, email, contrasenya, telefon);
         console.log("Proceso completado");
-        res.json(data); // Enviar una respuesta JSON con los datos obtenidos
+        res.json(data);
     } catch (error) {
-        // Manejar cualquier error que ocurra durante la conexión o la consulta
         console.error("Error:", error);
         res.status(500).json({ error: "Error interno del servidor" });
     }
 });
-async function POSTuser(Nom, Email, Contrasenya) {
+async function POSTuser(Nom, Email, Contrasenya, Telefon) {
     try {
         // Connect the client to the server (optional starting in v4.7)
         await client.connect();
@@ -92,7 +84,7 @@ async function POSTuser(Nom, Email, Contrasenya) {
         //Encriptar contrasenya
         Contrasenya = encriptarConSHA256(Contrasenya);
 
-        //Verificar si l'usuari existeix en la BDD o el correu [PENDENT]
+        //Verificar si l'usuari existeix en la BDD o el correu
         const existingUser = await collection.findOne({ name: Nom });
         const existingEmail = await collection.findOne({ name: Email });
 
@@ -106,14 +98,13 @@ async function POSTuser(Nom, Email, Contrasenya) {
                 return "Usuari no disponible";
             }
         }else{
-            // Crear un nuevo documento para insertar en la colección
             const nuevoUsuario = {
                 name: Nom,
                 email: Email,
+                tel: Telefon,
                 passwd: Contrasenya,
                 nextdate: nextDate
             };
-            // Insertar el nuevo documento en la colección
             const resultado = await collection.insertOne(nuevoUsuario);
             console.log("Nuevo usuario insertado:", resultado.insertedId);
         }
@@ -146,7 +137,6 @@ async function UpdateUser(usuari, data){
     await client.connect();
     console.log("Conectado a MongoDB");
     
-    // Seleccionar la base de datos y la colección
     const database = client.db("Estetica");
     const collection = database.collection("Usuaris");
 
@@ -161,7 +151,7 @@ async function UpdateUser(usuari, data){
 //--------------------------------------------------------------------
 //--------------------------------------------------------------------
 //DEL: Eliminar Dades:
-app.put("/POST/User/Date", async (req, res) => {
+app.put("/PUT/User/Date", async (req, res) => {
     try {
         const usuari = req.body.usuari;
 
@@ -196,7 +186,6 @@ async function UpdateUserDate(userName){
     }
 }
 //--------------------------------------------------------------------
-//--------------------------------------------------------------------
 //Altres: AccesToken/Cookies/Encriptació
 //--------------------------------------------
 //Funció per encriptar la contraseña a sha256:
@@ -207,19 +196,16 @@ function encriptarConSHA256(contraseña) {
   }
 //--------------------------------------------------------------------
 //--------------------------------------------------------------------
-//AUTH [PENDENT]
+//AUTH
 async function login(Nom, Contrasenya) {
     try {
-        // Connect the client to the server (optional starting in v4.7)
         await client.connect();
 
-        // Seleccionar la base de datos y la colección
         const database = client.db("Estetica");
         const collection = database.collection("Usuaris");
 
         Contrasenya = encriptarConSHA256(Contrasenya);
 
-        //Verificar si l'usuari existeix en la BDD o el correu [PENDENT]
         const existingUser = await collection.findOne({ name: Nom });
         if(existingUser){
             if (existingUser.passwd === Contrasenya) {
@@ -227,7 +213,6 @@ async function login(Nom, Contrasenya) {
                 console.log("¡Contraseña correcta! Usuario autenticado.");
                 const token = jwt.sign({ userId: existingUser.name }, 'secret_key', { expiresIn: '1h' });
 
-                //return existingUser.name;
                 return token;
 
             } else {
@@ -246,7 +231,6 @@ async function login(Nom, Contrasenya) {
         console.error("Error connecting to MongoDB:", error);
         throw error;
     }  finally {
-        // Ensures that the client will close when you finish/error
         await client.close();
     }
 }
@@ -260,17 +244,14 @@ app.post("/login/:nombre", async (req, res) => {
         const nombre = req.params.nombre;
         const contrasenya = req.body.password;
         //const contrasenya = "ahmed1234";
-        const data = await login(nombre, contrasenya); // Espera a que se resuelva la promesa
+        const data = await login(nombre, contrasenya);
         if(data == "Contraseña incorrecta" || data == "El usuario no existe"){
             res.json(data);
         }else{
-            //const token = jwt.sign({ userId: data }, 'secret_key', { expiresIn: '1h' });
-            //res.cookie("jwt", token);
-            res.json(data); // Enviar una respuesta JSON con los datos obtenidos
+            res.json(data);
         }
     
     } catch (error) {
-        // Manejar cualquier error que ocurra durante la conexión o la consulta
         console.error("Error:", error);
         res.status(500).json({ error: "Error interno del servidor" });
     }

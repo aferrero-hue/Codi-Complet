@@ -16,70 +16,96 @@
 }
 .hours {
     display: none;
-    max-width: 300px;
+    width: 80%;
     margin: 20px auto;
-    background-color: lightblue;
+    background-color: rgb(233, 236, 237);
     padding: 10px;
+}
+.hours h3 {
+  text-align: center; /* Centra el texto horizontalmente */
+  font-size: 24px; /* Cambia el tamaño de la fuente */
+  color: #432b70;
+  font-weight: bold;
+  margin: 10px;
 }
 .hour {
     padding: 10px;
     margin: 5px;
-    background-color: lightgreen;
+    background-color: rgb(110, 234, 110);
     text-align: center;
     cursor: pointer;
+
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    border-radius: 10px;
 }
 .fakehour {
   padding: 10px;
   margin: 5px;
-  background-color: rgb(236, 13, 13);
+  background-color: rgb(241, 60, 60);
   text-align: center;
   cursor: pointer;
+
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  border-radius: 10px;
+
+}
+.DeveloperMode {
+  padding: 10px;
+  margin: 5px;
+  background-color: rgb(196, 79, 171);
+  text-align: center;
+  cursor: pointer;
+
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  border-radius: 10px;
+
 }
 .oldhour {
   padding: 10px;
   margin: 5px;
-  background-color: rgb(242, 228, 228);
+  background-color: rgba(203, 200, 200, 0.796);
   text-align: center;
   cursor: pointer;
+
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  border-radius: 10px;
 }
 .myhour {
   padding: 10px;
   margin: 5px;
-  background-color: rgb(40, 55, 221);
+  background-color: rgb(94, 105, 231);
   text-align: center;
   cursor: pointer;
+
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  border-radius: 10px;
 }
+
 .hour.selected {
     background-color: green;
     color: white;
+
+    
 }
 .month-selector {
     text-align: center;
     margin: 20px auto;
+    margin-top: 80px;
 }
 .month-selector button {
     margin: 0 10px;
 }
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-  
-  .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 500px;
-  }
+
   
   .close-button {
     color: #aaa;
@@ -102,7 +128,7 @@
   }
   
   /************************************************************************************
-  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  Extra Styles
   ************************************************************************************/
   /* General */
 body {
@@ -162,6 +188,7 @@ table.calendar th, table.calendar td {
 }
 
 table.calendar th {
+  min-width: 85px;
   background-color: #6c757d;
   color: white;
 }
@@ -173,7 +200,7 @@ table.calendar td:hover {
 
 /* Hover */
 .hour:hover {
-  background-color: #ba12e9;
+  background-color: #5eab42;
 }
 
 /* Modal */
@@ -213,6 +240,13 @@ table.calendar td:hover {
   cursor: pointer;
 }
 
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
 h2 {
   color: #6c757d;
 }
@@ -222,10 +256,33 @@ p {
 }
 
 /* Delete Button */
-button[onclick="borrarData()"] {
+#btn_del {
   background-color: #6f42c1;
+  display: none;
 }
 
-button[onclick="borrarData()"]:hover {
+#btn_del:hover {
   background-color: #5a35a0;
+}
+
+#modalTextAlert{
+  color: red;
+}
+
+.del {
+  display: grid;
+  place-items: center;   
+}
+
+#btn_del {
+  font-size: 20px;       
+  font-weight: bold;      
+  margin-top: 20px;   
+  border: none;           
+  cursor: pointer;        
+  border-radius: 10px;     
+}
+
+#btn_del:hover {
+  background-color: #0056b3; 
 }

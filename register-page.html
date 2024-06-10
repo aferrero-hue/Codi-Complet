@@ -71,7 +71,7 @@
       <div class="container">
 
         <div class="d-flex justify-content-between align-items-center">
-          <h2>Registre REGISTER</h2>
+          <h2 class="log_title">Crea un nou compte d'usuari</h2>
           <ol>
             <li><a href="login-page.html">Ja disposes d'un compte d'usuari?</a></li>
           </ol>
@@ -83,16 +83,21 @@
       <div class="container" id="login-form">
           <div class="form-group">
             <label for="UserInput">Nou Usuari:</label><span id="Rnom"></span>
-            <input type="email" class="form-control" id="UserInput" placeholder="nom d'usuari">
+            <input type="text" class="form-control" id="UserInput" placeholder="usuari">
           </div>
           <br>
           <div class="form-group">
-            <label for="EmailInput">Email:</label><span id="Rmail"></span>
+            <label for="EmailInput">Correu electronic:</label><span id="Rmail"></span>
             <input type="email" class="form-control" id="EmailInput" placeholder="correu electronic">
           </div>
           <br>
           <div class="form-group">
-            <label for="PasswdInput">Password</label><span id="Rpasswd"></span>
+            <label for="TelInput">Telèfon:</label><span id="Rtel"></span>
+            <input type="text" class="form-control" id="TelInput" placeholder="telèfon">
+          </div>
+          <br>
+          <div class="form-group">
+            <label for="PasswdInput">Contrasenya</label><span id="Rpasswd"></span>
             <input type="password" class="form-control" id="PasswdInput" placeholder="contrasenya">
           </div>
           <br>
@@ -114,6 +119,7 @@
         var nombre = document.getElementById("UserInput").value; 
         var email = document.getElementById("EmailInput").value;
         var contrasenya = document.getElementById("PasswdInput").value;
+        var telefon = document.getElementById("TelInput").value;
         var settings = {
           "url": "http://localhost:8000/POST/User", 
           "method": "POST",
@@ -121,6 +127,7 @@
           "data": JSON.stringify({
             "nombre": nombre,
             "email": email,
+            "telefon": telefon,
             "contrasenya": contrasenya
           }), // Enviar los tres elementos como parte del cuerpo
           "contentType": "application/json"
@@ -128,7 +135,7 @@
     
       
         $.ajax(settings).done(function (response) {
-          console.log(response);
+          //console.log(response);
           //PENDENT: Falta modificar la resposta en el cas de que l'usuari no esta disponible.
           //NOTA: La resposta ja es funcional, el "que" provoca cada resposta esta pendent.
           window.location.href = "login-page.html";
@@ -153,7 +160,6 @@
   <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
   <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
